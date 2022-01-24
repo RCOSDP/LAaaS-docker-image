@@ -1,0 +1,171 @@
+version: '3'
+services:
+  learninglocker:
+    image: public.ecr.aws/v8a6v1r8/learninglocker:2.0.0
+    container_name: learninglocker
+    depends_on:
+      - learninglocker_mongo
+      - learninglocker_redis
+    ports:
+      - "3000:3000"
+      - "8080:8080"
+      - "8081:8081"
+    working_dir: /usr/local/src/learninglocker
+    command: bash -c "source ~/.bashrc && yarn migrate && pm2 start pm2/all.json && cd ../xapi-service && pm2 start pm2/xapi.json && pm2 logs"
+  learninglocker_mongo:
+    image: mongo:4.0.8
+    container_name: learninglocker_mongo
+    restart: always
+    volumes:
+      - ./dump/learninglocker_mongo:/dump
+      - ./init/learninglocker_mongo_restore.sh:/docker-entrypoint-initdb.d/mongorestore.sh
+      - ./data/learninglocker_mongo:/data/db
+  learninglocker_redis:
+    image: redis:5.0.4
+    container_name: learninglocker_redis
+    restart: always
+    volumes:
+      - ./data/learninglocker_redis:/data
+    command: redis-server --appendonly yes
+  xapi_stmt_gen:
+    image: public.ecr.aws/v8a6v1r8/xapi_stmt_gen:2.6.0
+    container_name: xapi_stmt_gen
+    tty: true
+    environment:
+      - TZ=Asia/Tokyo
+      - INTERVAL=-1
+      - LRS_USERNAME=
+      - LRS_PASSWORD=
+    command: bash -c "
+      sed -i -e \"s/user:.*/user:'de25a0afae3d21b67a7278a330ce6de115ba3c77',/\" config/app.js &&
+      sed -i -e \"s/pass:.*/pass:'42df984faf8f4ed457be5a85477df23a9e3cc62e'/\" config/app.js &&
+      node
+      "
+  openlrw_mongo:
+    image: mongo:4.0.27
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGO_INITDB_DATABASE=test
+      - OPENLRW_USERNAME=caliper
+      - OPENLRW_PASSWORD=caliper
+      - OPENLRW_DATABASE=caliper
+      - OPENLRW_URI=mongodb://caliper:caliper@openlrw_mongo:27017/caliper
+      - OPENLRW_SSL=false
+    container_name: openlrw_mongo
+    volumes:
+      - ./dump/openlrw_mongo:/dump
+      - ./init/openlrw_mongo_restore.sh:/docker-entrypoint-initdb.d/mongorestore.sh
+      - ./data/openlrw_mongo:/data/db
+    ports:
+      - "27017:27017"
+  openlrw:
+    image: public.ecr.aws/v8a6v1r8/openlrw:2.2.0
+    container_name: openlrw_web
+    depends_on:
+      - openlrw_mongo
+    ports:
+      - "9966:9966"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGO_INITDB_DATABASE=test
+      - OPENLRW_USERNAME=caliper
+      - OPENLRW_PASSWORD=caliper
+      - OPENLRW_DATABASE=caliper
+      - OPENLRW_URI=mongodb://caliper:caliper@openlrw_mongo:27017/caliper
+      - OPENLRW_SSL=false
+    command: bash -c "/app/docker-start.sh"
+  caliper_stmt_gen:
+    image: public.ecr.aws/v8a6v1r8/caliper_stmt_gen:2.2.0
+    container_name: caliper_stmt_gen
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=moodle-docker_db_1
+      - DB_PORT=5432
+      - DB_DATABASE=moodle
+      - DB_USERNAME=moodleuser
+      - DB_PASSWORD=m@0dl3ing
+      - PREFIX=mdl_
+      - DB_LOG_HOST=caliper_log_db
+      - DB_LOG_DATABASE=caliper_log
+      - DB_LOG_USERNAME=caliper_cli
+      - DB_LOG_PASSWORD=caliper
+      - DB_EPPN=false
+      - APP_NAME=moodle
+      - APP_URL='http://localhost:8000'
+      - OPENLRW_HOST='openlrw:9966/key/caliper'
+    depends_on:
+      - caliper_log_db
+      - openlrw
+      - openlrw_mongo
+    entrypoint: []
+    command: sh -c "
+      sed -i -e 's/\"default\".*/\"default\" => \"3e81cd30-e8a9-4533-b179-38c6999a9705\",/' config/lrw.php &&
+      /app/caliper-cli generate
+      "
+  learning_analytics_db:
+    image: postgres:11
+    container_name: learning_analytics_db
+    environment:
+      - POSTGRES_USER=learning_analytics
+      - POSTGRES_PASSWORD=learning_analytics
+      - POSTGRES_DB=learning_analytics
+    volumes:
+      - ./init/learning_analytics_db.sql:/docker-entrypoint-initdb.d/learning_analytics_db.sql
+      - ./data/learning_analytics_db:/var/lib/postgresql/data
+  caliper_log_db:
+    image: postgres:11
+    container_name: caliper_log_db
+    environment:
+      - POSTGRES_USER=caliper_cli
+      - POSTGRES_PASSWORD=caliper
+      - POSTGRES_DB=caliper_log
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./init/caliper_log_db.sql:/docker-entrypoint-initdb.d/caliper_log_db.sql
+      - ./data/caliper_log_db:/var/lib/postgresql/data
+  superset:
+    image: public.ecr.aws/v8a6v1r8/superset:2.1.1
+    container_name: superset
+    ports:
+      - "8088:8088"
+    depends_on:
+      - superset-db
+    environment:
+      - SECRET_KEY=JmAH_gnn9y5T8Wgjt4IBlzjmYMHEGOQONLuJyfmMMOg
+      - ADMIN_USERNAME=admin
+      - ADMIN_FIRSTNAME=admin
+      - ADMIN_LASTNAME=user
+      - ADMIN_EMAIL=admin@fab.org
+      - ADMIN_PASSWORD=admin
+    volumes:
+      - ./data/superset/superset.db:/root/.superset/superset.db
+  superset-db:
+    image: public.ecr.aws/v8a6v1r8/superset-db:2.3.1
+    container_name: superset-db
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data/superset-db:/var/lib/pgsql/9.6/data
+    user: postgres
+    environment:
+      - LRS_HOST=learninglocker_mongo
+      - LRS_PORT=27017
+      - LRS_DB=learninglocker
+      - LRS_DB_USER=
+      - LRS_DB_PASSWORD=
+      - LRS_COLLECTION=statements
+      - LRW_HOST=openlrw_mongo
+      - LRW_PORT=27017
+      - LRW_DB=caliper
+      - LRW_DB_USER=caliper
+      - LRW_DB_PASSWORD=caliper
+      - LRW_COLLECTION=mongoEvent
+  jupyterhub:
+    image: public.ecr.aws/v8a6v1r8/jupyterhub:2.2.0
+    container_name: jupyterhub
+    ports:
+      - "8001:8000"
