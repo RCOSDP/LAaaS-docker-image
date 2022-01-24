@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"learninglocker.importcsv"},{"v":2,"key":{"organisation":1},"name":"organisation_1","ns":"learninglocker.importcsv","background":true},{"v":2,"key":{"owner":1},"name":"owner_1","ns":"learninglocker.importcsv","background":true}],"uuid":"d7269791d251483e86425206a3208592"}

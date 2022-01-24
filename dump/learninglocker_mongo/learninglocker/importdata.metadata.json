@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"learninglocker.importdata"},{"v":2,"key":{"importModel":1},"name":"importModel_1","ns":"learninglocker.importdata","background":true}],"uuid":"a134dd64d82c41a2be9ffedb83a97dff"}

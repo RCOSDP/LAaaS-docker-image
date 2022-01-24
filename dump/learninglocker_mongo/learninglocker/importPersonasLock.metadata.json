@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"learninglocker.importPersonasLock"},{"v":2,"unique":true,"key":{"ifis":1},"name":"ifis_1","ns":"learninglocker.importPersonasLock","background":true},{"v":2,"key":{"organisation":1},"name":"organisation_1","ns":"learninglocker.importPersonasLock","background":true}],"uuid":"d43c876a40ff4bd095cddad358b425b8"}
