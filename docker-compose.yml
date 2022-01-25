@@ -169,3 +169,7 @@ services:
       - "8001:8000"
     volumes:
       - ./notebooks:/home/jupyter
+networks:
+  default:
+    external:
+      name: moodle-docker_default
