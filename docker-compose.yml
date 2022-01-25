@@ -167,3 +167,5 @@ services:
     container_name: jupyterhub
     ports:
       - "8001:8000"
+    volumes:
+      - ./notebooks:/home/jupyter
