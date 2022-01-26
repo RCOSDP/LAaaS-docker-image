@@ -17,8 +17,7 @@ services:
     container_name: learninglocker_mongo
     restart: always
     volumes:
-      - ./dump/learninglocker_mongo:/dump
-      - ./init/learninglocker_mongo_restore.sh:/docker-entrypoint-initdb.d/mongorestore.sh
+      - ./init/learninglocker_mongo:/docker-entrypoint-initdb.d
       - ./data/learninglocker_mongo:/data/db
   learninglocker_redis:
     image: redis:5.0.4
@@ -53,8 +52,7 @@ services:
       - OPENLRW_SSL=false
     container_name: openlrw_mongo
     volumes:
-      - ./dump/openlrw_mongo:/dump
-      - ./init/openlrw_mongo_restore.sh:/docker-entrypoint-initdb.d/mongorestore.sh
+      - ./init/openlrw_mongo:/docker-entrypoint-initdb.d
       - ./data/openlrw_mongo:/data/db
     ports:
       - "27017:27017"
