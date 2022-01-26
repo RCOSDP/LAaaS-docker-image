@@ -48,8 +48,6 @@ services:
       - OPENLRW_USERNAME=caliper
       - OPENLRW_PASSWORD=caliper
       - OPENLRW_DATABASE=caliper
-      - OPENLRW_URI=mongodb://caliper:caliper@openlrw_mongo:27017/caliper
-      - OPENLRW_SSL=false
     container_name: openlrw_mongo
     volumes:
       - ./init/openlrw_mongo:/docker-entrypoint-initdb.d
@@ -64,9 +62,6 @@ services:
     ports:
       - "9966:9966"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
-      - MONGO_INITDB_DATABASE=test
       - OPENLRW_USERNAME=caliper
       - OPENLRW_PASSWORD=caliper
       - OPENLRW_DATABASE=caliper
