@@ -139,8 +139,6 @@ services:
       - ADMIN_LASTNAME=user
       - ADMIN_EMAIL=admin@fab.org
       - ADMIN_PASSWORD=admin
-    volumes:
-      - ./data/superset/superset.db:/root/.superset/superset.db
   superset-db:
     image: public.ecr.aws/v8a6v1r8/superset-db:2.3.1
     container_name: superset-db
