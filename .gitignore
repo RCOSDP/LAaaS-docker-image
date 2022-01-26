@@ -1,4 +1,3 @@
 /data/*
-!/data/superset
 moodle-docker
 /notebooks/.*
