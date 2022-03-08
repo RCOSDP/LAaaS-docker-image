@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"learninglocker.personas"},{"v":2,"key":{"organisation":1},"name":"organisation_1","ns":"learninglocker.personas","background":true}],"uuid":"7a353052957f45f088a6196914337bd7"}

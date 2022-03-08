@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"learninglocker.streams"},{"v":2,"key":{"organisation":1},"name":"organisation_1","ns":"learninglocker.streams","background":true}],"uuid":"1c385ec56e004172b13b9c0e7c5dbc67"}

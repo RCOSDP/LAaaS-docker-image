@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"learninglocker.fullActivities"},{"v":2,"unique":true,"key":{"organisation":1,"lrs_id":1,"activityId":1},"name":"org_lrs_id_activityId","ns":"learninglocker.fullActivities","background":true}],"uuid":"7f95ae3f74a049f1b41bda7ee69b67ff"}
