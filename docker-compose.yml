@@ -18,13 +18,13 @@ services:
     restart: always
     volumes:
       - ./init/learninglocker_mongo:/docker-entrypoint-initdb.d
-      - ./data/learninglocker_mongo:/data/db
+      - learninglocker_mongo:/data/db
   learninglocker_redis:
     image: redis:5.0.4
     container_name: learninglocker_redis
     restart: always
     volumes:
-      - ./data/learninglocker_redis:/data
+      - learninglocker_redis:/data
     command: redis-server --appendonly yes
   xapi_stmt_gen:
     image: public.ecr.aws/v8a6v1r8/xapi_stmt_gen:2.6.0
@@ -51,7 +51,7 @@ services:
     container_name: openlrw_mongo
     volumes:
       - ./init/openlrw_mongo:/docker-entrypoint-initdb.d
-      - ./data/openlrw_mongo:/data/db
+      - openlrw_mongo:/data/db
     ports:
       - "27017:27017"
   openlrw:
@@ -105,7 +105,7 @@ services:
       - POSTGRES_DB=learning_analytics
     volumes:
       - ./init/learning_analytics_db.sql:/docker-entrypoint-initdb.d/learning_analytics_db.sql
-      - ./data/learning_analytics_db:/var/lib/postgresql/data
+      - learning_analytics_db:/var/lib/postgresql/data
   caliper_log_db:
     image: postgres:11
     container_name: caliper_log_db
@@ -117,7 +117,7 @@ services:
       - "15432:5432"
     volumes:
       - ./init/caliper_log_db.sql:/docker-entrypoint-initdb.d/caliper_log_db.sql
-      - ./data/caliper_log_db:/var/lib/postgresql/data
+      - caliper_log_db:/var/lib/postgresql/data
   superset:
     image: public.ecr.aws/v8a6v1r8/superset:2.1.1
     container_name: superset
@@ -140,7 +140,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - ./data/superset-db:/var/lib/pgsql/9.6/data
+      - superset-db:/var/lib/pgsql/9.6/data
     user: postgres
     environment:
       - LRS_HOST=learninglocker_mongo
@@ -166,3 +166,10 @@ networks:
   default:
     external:
       name: moodle-docker_default
+volumes:
+  learninglocker_mongo:
+  learninglocker_redis:
+  openlrw_mongo:
+  learning_analytics_db:
+  caliper_log_db:
+  superset-db:
