@@ -1,5 +1,6 @@
 # LAaaS-docker-image
-システム構成や操作手順、ステートメント仕様等の詳細は[LAaaS-docker](https://github.com/RCOSDP/LAaaS-docker)を参照すること。
+本プロダクトはビルド済みのコンテナイメージから初期設定済みの[LAaaS-docker](https://github.com/RCOSDP/LAaaS-docker)を起動する。  
+システム構成や操作手順、ステートメント仕様等の詳細はLAaaS-dockerの[README](https://github.com/RCOSDP/LAaaS-docker/blob/master/README.adoc)を参照すること。
 
 ## LMS
 ### Moodleのインストール（初回のみ）
