@@ -16,7 +16,8 @@ $ bin/moodle_start
 ```
 
 ### 学習活動の記録
-[Moodle](http://localhost:8000)にアクセスし、初期設定後、学習活動を行う。
+[Moodle](http://localhost:8000)にアクセスし、初期設定後に学習活動を行う。  
+Moodleの使い方については[ユーザガイド](https://docs.moodle.org/34/en/Main_page)を参照すること。
 
 ### Moodleの停止
 
