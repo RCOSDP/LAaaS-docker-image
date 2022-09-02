@@ -34,8 +34,8 @@ services:
       - TZ=Asia/Tokyo
       - INTERVAL=-1
     command: bash -c "
-      sed -i -e \"s/user:.*/user:'de25a0afae3d21b67a7278a330ce6de115ba3c77',/\" config/app.js &&
-      sed -i -e \"s/pass:.*/pass:'42df984faf8f4ed457be5a85477df23a9e3cc62e'/\" config/app.js &&
+      sed -i -e \"s/key:.*/key:'de25a0afae3d21b67a7278a330ce6de115ba3c77',/\" config/app.js &&
+      sed -i -e \"s/secret:.*/secret:'42df984faf8f4ed457be5a85477df23a9e3cc62e'/\" config/app.js &&
       node
       "
   openlrw_mongo:
