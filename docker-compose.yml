@@ -163,6 +163,9 @@ services:
   jupyterhub:
     image: public.ecr.aws/v8a6v1r8/jupyterhub:2.2.1
     container_name: jupyterhub
+    environment:
+      - LOCAL_UID=9001
+      - LOCAL_GID=9001
     ports:
       - "8001:8000"
     volumes:
