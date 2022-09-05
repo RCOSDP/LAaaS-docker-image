@@ -133,8 +133,12 @@ services:
       - ADMIN_EMAIL=admin@fab.org
       - ADMIN_PASSWORD=admin
     volumes:
-      - ./superset/superset_config.py:/root/.superset/superset_config.py
       - ./data/superset/superset.db:/root/.superset/superset.db
+    entrypoint: []
+    command: bash -c "
+      sed -i -e \"s/^SQLALCHEMY_DATABASE_URI.*/#&/\" /root/.superset/superset_config.py &&
+      /wait-for-it.sh -t 0 superset-db:5432 -- /entrypoint.sh
+      "
   superset-db:
     image: public.ecr.aws/v8a6v1r8/superset-db:2.3.3
     container_name: superset-db
