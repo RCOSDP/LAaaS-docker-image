@@ -1,7 +1,7 @@
 version: '3'
 services:
   learninglocker:
-    image: public.ecr.aws/v8a6v1r8/learninglocker:2.0.0
+    image: public.ecr.aws/v8a6v1r8/learninglocker:2.0.1
     container_name: learninglocker
     depends_on:
       - learninglocker_mongo
@@ -27,15 +27,15 @@ services:
       - learninglocker_redis:/data
     command: redis-server --appendonly yes
   xapi_stmt_gen:
-    image: public.ecr.aws/v8a6v1r8/xapi_stmt_gen:2.6.0
+    image: public.ecr.aws/v8a6v1r8/xapi_stmt_gen:2.8.0
     container_name: xapi_stmt_gen
     tty: true
     environment:
       - TZ=Asia/Tokyo
       - INTERVAL=-1
     command: bash -c "
-      sed -i -e \"s/user:.*/user:'de25a0afae3d21b67a7278a330ce6de115ba3c77',/\" config/app.js &&
-      sed -i -e \"s/pass:.*/pass:'42df984faf8f4ed457be5a85477df23a9e3cc62e'/\" config/app.js &&
+      sed -i -e \"s/key:.*/key:'de25a0afae3d21b67a7278a330ce6de115ba3c77',/\" config/app.js &&
+      sed -i -e \"s/secret:.*/secret:'42df984faf8f4ed457be5a85477df23a9e3cc62e'/\" config/app.js &&
       node
       "
   openlrw_mongo:
@@ -55,7 +55,7 @@ services:
     ports:
       - "27017:27017"
   openlrw:
-    image: public.ecr.aws/v8a6v1r8/openlrw:2.2.0
+    image: public.ecr.aws/v8a6v1r8/openlrw:2.3.0
     container_name: openlrw_web
     depends_on:
       - openlrw_mongo
@@ -69,7 +69,7 @@ services:
       - OPENLRW_SSL=false
     command: bash -c "/app/docker-start.sh"
   caliper_stmt_gen:
-    image: public.ecr.aws/v8a6v1r8/caliper_stmt_gen:2.2.0
+    image: public.ecr.aws/v8a6v1r8/caliper_stmt_gen:2.3.0
     container_name: caliper_stmt_gen
     environment:
       - DB_CONNECTION=pgsql
@@ -119,7 +119,7 @@ services:
       - ./init/caliper_log_db.sql:/docker-entrypoint-initdb.d/caliper_log_db.sql
       - caliper_log_db:/var/lib/postgresql/data
   superset:
-    image: public.ecr.aws/v8a6v1r8/superset:2.1.1
+    image: public.ecr.aws/v8a6v1r8/superset:2.2.0
     container_name: superset
     ports:
       - "8088:8088"
@@ -134,8 +134,13 @@ services:
       - ADMIN_PASSWORD=admin
     volumes:
       - ./data/superset/superset.db:/root/.superset/superset.db
+    entrypoint: []
+    command: bash -c "
+      sed -i -e \"s/^SQLALCHEMY_DATABASE_URI.*/#&/\" /root/.superset/superset_config.py &&
+      /wait-for-it.sh -t 0 superset-db:5432 -- /entrypoint.sh
+      "
   superset-db:
-    image: public.ecr.aws/v8a6v1r8/superset-db:2.3.1
+    image: public.ecr.aws/v8a6v1r8/superset-db:2.3.3
     container_name: superset-db
     ports:
       - "5433:5432"
@@ -156,8 +161,11 @@ services:
       - LRW_DB_PASSWORD=caliper
       - LRW_COLLECTION=mongoEvent
   jupyterhub:
-    image: public.ecr.aws/v8a6v1r8/jupyterhub:2.2.0
+    image: public.ecr.aws/v8a6v1r8/jupyterhub:2.2.1
     container_name: jupyterhub
+    environment:
+      - LOCAL_UID=9001
+      - LOCAL_GID=9001
     ports:
       - "8001:8000"
     volumes:
