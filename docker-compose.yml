@@ -119,7 +119,7 @@ services:
       - ./init/caliper_log_db.sql:/docker-entrypoint-initdb.d/caliper_log_db.sql
       - caliper_log_db:/var/lib/postgresql/data
   superset:
-    image: public.ecr.aws/v8a6v1r8/superset:2.2.0
+    image: public.ecr.aws/v8a6v1r8/superset:3.0.0
     container_name: superset
     ports:
       - "8088:8088"
