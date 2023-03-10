@@ -147,7 +147,6 @@ services:
     container_name: superset-db
     volumes:
       - superset-db:/var/lib/pgsql/9.6/data
-    user: postgres
     environment:
       - POSTGRES_USER=superset
       - POSTGRES_PASSWORD=superset
