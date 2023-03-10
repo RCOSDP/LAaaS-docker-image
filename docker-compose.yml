@@ -69,7 +69,7 @@ services:
       - OPENLRW_SSL=false
     command: bash -c "/app/docker-start.sh"
   caliper_stmt_gen:
-    image: public.ecr.aws/v8a6v1r8/caliper_stmt_gen:2.3.0
+    image: public.ecr.aws/v8a6v1r8/caliper_stmt_gen:2.4.0
     container_name: caliper_stmt_gen
     environment:
       - DB_CONNECTION=pgsql
