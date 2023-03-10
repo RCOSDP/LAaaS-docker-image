@@ -1,7 +1,7 @@
 version: '3'
 services:
   learninglocker:
-    image: public.ecr.aws/v8a6v1r8/learninglocker:2.0.1
+    image: public.ecr.aws/v8a6v1r8/learninglocker:3.0.0
     container_name: learninglocker
     depends_on:
       - learninglocker_mongo
