@@ -149,6 +149,9 @@ services:
       - superset-db:/var/lib/pgsql/9.6/data
     user: postgres
     environment:
+      - POSTGRES_USER=superset
+      - POSTGRES_PASSWORD=superset
+      - POSTGRES_DB=superset
       - LRS_HOST=learninglocker_mongo
       - LRS_PORT=27017
       - LRS_DB=learninglocker
