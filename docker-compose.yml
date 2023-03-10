@@ -87,6 +87,7 @@ services:
       - APP_NAME=moodle
       - APP_URL='http://localhost:8000'
       - OPENLRW_HOST='openlrw:9966/key/caliper'
+      - EXCLUDED_ORIGINS=
     depends_on:
       - caliper_log_db
       - openlrw
