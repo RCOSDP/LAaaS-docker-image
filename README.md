@@ -60,9 +60,9 @@ $ docker-compose run --rm caliper_stmt_gen
 
 #### ノートブック一覧
 
-* xAPIステートメントの取得：[get_statements_from_learninglocker](http://localhost:8001/user/jupyter/notebooks/get_statements_from_learninglocker.ipynb)
-* Caliperステートメントの取得：[get_statements_from_openlrw](http://localhost:8001/user/jupyter/notebooks/get_statements_from_openlrw.ipynb)
-* Supersetにノートブック実行結果を登録：[import_analysis_result_to_superset](http://localhost:8001/user/jupyter/notebooks/import_analysis_result_to_superset.ipynb)
+* xAPIステートメントの取得：[xAPI_statements](http://localhost:8001/user/jupyter/notebooks/xAPI_statements.ipynb)
+* Caliperステートメントの取得：[Caliper_statements](http://localhost:8001/user/jupyter/notebooks/Caliper_statements.ipynb)
+* Supersetにノートブック実行結果を登録：[Import_to_Superset](http://localhost:8001/user/jupyter/notebooks/Import_to_Superset.ipynb)
 
 ### LA基盤の停止
 
