@@ -145,8 +145,6 @@ services:
   superset-db:
     image: public.ecr.aws/v8a6v1r8/superset-db:3.1.0
     container_name: superset-db
-    volumes:
-      - superset-db:/var/lib/pgsql/9.6/data
     environment:
       - POSTGRES_USER=superset
       - POSTGRES_PASSWORD=superset
@@ -163,6 +161,8 @@ services:
       - LRW_DB_USER=caliper
       - LRW_DB_PASSWORD=caliper
       - LRW_COLLECTION=mongoEvent
+    volumes:
+      - superset-db:/var/lib/postgresql/data
   jupyterhub:
     image: public.ecr.aws/v8a6v1r8/jupyterhub:2.2.1
     container_name: jupyterhub
