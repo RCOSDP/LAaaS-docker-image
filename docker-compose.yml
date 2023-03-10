@@ -27,7 +27,7 @@ services:
       - learninglocker_redis:/data
     command: redis-server --appendonly yes
   xapi_stmt_gen:
-    image: public.ecr.aws/v8a6v1r8/xapi_stmt_gen:2.8.0
+    image: public.ecr.aws/v8a6v1r8/xapi_stmt_gen:2.9.2
     container_name: xapi_stmt_gen
     tty: true
     environment:
