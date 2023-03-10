@@ -36,7 +36,7 @@ $ docker-compose up -d
 ### xAPIステートメント変換
 
 ```
-$ docker exec -it xapi_stmt_gen npm start
+$ docker exec xapi_stmt_gen npm start
 ```
 
 ### Caliperステートメント変換
