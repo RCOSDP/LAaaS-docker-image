@@ -1,7 +1,7 @@
 version: '3'
 services:
   learninglocker:
-    image: public.ecr.aws/v8a6v1r8/learninglocker:2.0.1
+    image: public.ecr.aws/v8a6v1r8/learninglocker:3.0.0
     container_name: learninglocker
     depends_on:
       - learninglocker_mongo
@@ -27,7 +27,7 @@ services:
       - learninglocker_redis:/data
     command: redis-server --appendonly yes
   xapi_stmt_gen:
-    image: public.ecr.aws/v8a6v1r8/xapi_stmt_gen:2.8.0
+    image: public.ecr.aws/v8a6v1r8/xapi_stmt_gen:2.9.2
     container_name: xapi_stmt_gen
     tty: true
     environment:
@@ -69,7 +69,7 @@ services:
       - OPENLRW_SSL=false
     command: bash -c "/app/docker-start.sh"
   caliper_stmt_gen:
-    image: public.ecr.aws/v8a6v1r8/caliper_stmt_gen:2.3.0
+    image: public.ecr.aws/v8a6v1r8/caliper_stmt_gen:2.4.0
     container_name: caliper_stmt_gen
     environment:
       - DB_CONNECTION=pgsql
@@ -87,6 +87,7 @@ services:
       - APP_NAME=moodle
       - APP_URL='http://localhost:8000'
       - OPENLRW_HOST='openlrw:9966/key/caliper'
+      - EXCLUDED_ORIGINS=
     depends_on:
       - caliper_log_db
       - openlrw
@@ -119,7 +120,7 @@ services:
       - ./init/caliper_log_db.sql:/docker-entrypoint-initdb.d/caliper_log_db.sql
       - caliper_log_db:/var/lib/postgresql/data
   superset:
-    image: public.ecr.aws/v8a6v1r8/superset:2.2.0
+    image: public.ecr.aws/v8a6v1r8/superset:3.0.0
     container_name: superset
     ports:
       - "8088:8088"
@@ -132,22 +133,22 @@ services:
       - ADMIN_LASTNAME=user
       - ADMIN_EMAIL=admin@fab.org
       - ADMIN_PASSWORD=admin
+      - SUPERSET_DBUSER=superset
+      - SUPERSET_DBPASS=superset
     volumes:
       - ./data/superset/superset.db:/root/.superset/superset.db
     entrypoint: []
     command: bash -c "
-      sed -i -e \"s/^SQLALCHEMY_DATABASE_URI.*/#&/\" /root/.superset/superset_config.py &&
+      echo 'del SQLALCHEMY_DATABASE_URI' >> /root/.superset/superset_config.py &&
       /wait-for-it.sh -t 0 superset-db:5432 -- /entrypoint.sh
       "
   superset-db:
-    image: public.ecr.aws/v8a6v1r8/superset-db:2.3.3
+    image: public.ecr.aws/v8a6v1r8/superset-db:3.1.0
     container_name: superset-db
-    ports:
-      - "5433:5432"
-    volumes:
-      - superset-db:/var/lib/pgsql/9.6/data
-    user: postgres
     environment:
+      - POSTGRES_USER=superset
+      - POSTGRES_PASSWORD=superset
+      - POSTGRES_DB=superset
       - LRS_HOST=learninglocker_mongo
       - LRS_PORT=27017
       - LRS_DB=learninglocker
@@ -160,6 +161,8 @@ services:
       - LRW_DB_USER=caliper
       - LRW_DB_PASSWORD=caliper
       - LRW_COLLECTION=mongoEvent
+    volumes:
+      - superset-db:/var/lib/postgresql/data
   jupyterhub:
     image: public.ecr.aws/v8a6v1r8/jupyterhub:2.2.1
     container_name: jupyterhub
